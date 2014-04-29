@@ -105,7 +105,8 @@ var wm = wm || {};
 
 		updateContent:function( model ) {
 			this.removeContent();
-			this.collection.reset().fetch();
+			this.collection.reset();
+			this.collection.fetch();
 		},
 
 		removeContent: function() {

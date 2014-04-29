@@ -56,3 +56,33 @@ function workmates_filter_message_ac_select( $sql = '', $search_terms = '', $pag
 	return apply_filters( 'workmates_filter_message_ac_select', $sql, $search_terms, $pag_sql );
 }
 
+/**
+ * Filter BP_User_Query::populate_extras to override each queries users fullname
+ * 
+ * Replaces bp_xprofile_filter_user_query_populate_extras if BuddyPress xprofile is not active
+ *
+ * @package WorkMates
+ * @since 1.0
+ * 
+ * @param BP_User_Query $user_query
+ * @param string $user_ids_sql
+ */
+function workmates_user_query_include_fullnames( BP_User_Query $user_query, $user_ids_sql ) {
+
+	// BuddyPress xprofile is handling it
+	// But if not activated, as invites_template
+	// uses fullname, this function avoids
+	// the notice error.
+	if ( bp_is_active( 'xprofile' ) )
+		return;
+
+	$user_id_names = bp_core_get_user_displaynames( $user_query->user_ids );
+
+	// Loop through names and override each user's fullname
+	foreach ( $user_id_names as $user_id => $user_fullname ) {
+		if ( isset( $user_query->results[ $user_id ] ) ) {
+			$user_query->results[ $user_id ]->fullname = $user_fullname;
+		}
+	}
+}
+add_action( 'bp_user_query_populate_extras', 'workmates_user_query_include_fullnames', 2, 2 );
