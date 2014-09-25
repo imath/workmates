@@ -7,7 +7,8 @@
 	padding:10px;
 	left: 0;
 	bottom: 0;
-	overflow: auto;
+	overflow: hidden;
+	width:95%;
 }
 
 ul#workmates-list h4 {
@@ -31,12 +32,20 @@ ul#workmates-list h4 {
 	float:left;
 }
 .workmates-users .user .displayname {
-	margin-left:60px;
-	line-height:50px;
-	
+	margin-left:55px;
+	margin-right:5px;
+	height:50px;
+	text-align: left;
 }
-.workmates-users .user .displayname strong{
+.workmates-users .user .displayname strong {
 	font-weight:bold;
+	display:inline-block;
+	height:100%;
+	line-height:45px;
+	white-space: nowrap;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+	width:90%;
 }
 
 /**
@@ -50,6 +59,10 @@ ul#workmates-list h4 {
 
 .media-modal.no-sidebar .media-sidebar {
 	display: none;
+}
+
+.media-modal.no-sidebar span.screen-reader-text {
+	display:none;
 }
 
 .media-modal.smaller {
@@ -183,6 +196,7 @@ ul#workmates-list h4 {
 	width: 38px;
 	float:left;
 	box-shadow: 0 0 0 1px #fff, 0 0 0 2px #1e8cbe;
+	list-style: none;
 }
 
 .user-selection .selection-view ul li img {
