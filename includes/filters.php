@@ -1,13 +1,13 @@
 <?php
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Search user count query Fallback in case xprofile is not activated
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses buddypress() to get BuddyPress main instance
  * @uses bp_is_active() to check the component is active
  * @return string the filtered count query
@@ -31,10 +31,10 @@ function workmates_filter_message_ac_count( $sql = '' ) {
 
 /**
  * Search user select query Fallback in case xprofile is not activated
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses buddypress() to get BuddyPress main instance
  * @uses bp_is_active() to check the component is active
  * @return string the filtered select query
@@ -58,12 +58,12 @@ function workmates_filter_message_ac_select( $sql = '', $search_terms = '', $pag
 
 /**
  * Filter BP_User_Query::populate_extras to override each queries users fullname
- * 
+ *
  * Replaces bp_xprofile_filter_user_query_populate_extras if BuddyPress xprofile is not active
  *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @param BP_User_Query $user_query
  * @param string $user_ids_sql
  */

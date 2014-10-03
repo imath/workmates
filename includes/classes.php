@@ -1,8 +1,8 @@
 <?php
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( !class_exists( 'WorkMates_Group_Invite_Query' ) ) :
+if ( ! class_exists( 'WorkMates_Group_Invite_Query' ) ) :
 /**
  * WorkMates Group invite Class
  *
@@ -25,12 +25,12 @@ class WorkMates_Group_Invite_Query extends BP_User_Query {
 	 * @since 1.0
 	 */
 	public function setup_hooks() {
-		
+
 		add_action( 'bp_pre_user_query_construct', array( $this, 'build_exclude_args' ) );
 
-		if( ! bp_is_active( 'xprofile' ) )
+		if ( ! bp_is_active( 'xprofile' ) ) {
 			add_action( 'bp_pre_user_query', array( $this, 'search_noprofile_fallback' ), 10, 1 );
-		
+		}
 	}
 
 	/**
@@ -47,9 +47,9 @@ class WorkMates_Group_Invite_Query extends BP_User_Query {
 
 		$group_member_ids = $this->get_group_member_ids();
 
-		if( !empty( $group_member_ids ) )
+		if ( !empty( $group_member_ids ) ) {
 			$this->query_vars['exclude'] = $group_member_ids;
-
+		}
 	}
 
 	/**
@@ -57,7 +57,7 @@ class WorkMates_Group_Invite_Query extends BP_User_Query {
 	 *
 	 * @package WorkMates
 	 * @since 1.0
-	 * 
+	 *
 	 * @return array $ids User IDs of relevant group member ids
 	 */
 	protected function get_group_member_ids() {
@@ -101,20 +101,30 @@ class WorkMates_Group_Invite_Query extends BP_User_Query {
 	public function search_noprofile_fallback( $user_query = null ) {
 		global $wpdb;
 
-		if( empty( $user_query ) )
+		if ( empty( $user_query ) || ( ! empty( $user_query->uid_clauses['where'] ) && preg_match( '/user_nicename/', $user_query->uid_clauses['where'] ) ) ) {
 			return;
+		}
 
-		$context = !empty( $user_query->query_vars['context'] ) ? $user_query->query_vars['context'] : false;
-		$search_terms = !empty( $user_query->query_vars['search_terms'] ) ? $user_query->query_vars['search_terms'] : false;
+		$context = false;
 
-		if( empty( $context ) || $context != 'workmates' || empty( $search_terms ) )
+		if ( ! empty( $user_query->query_vars['context'] ) ) {
+			$context = $user_query->query_vars['context'];
+		}
+
+		$search_terms = false;
+
+		if ( ! empty( $user_query->query_vars['search_terms'] ) ) {
+			$search_terms = $user_query->query_vars['search_terms'];
+		}
+
+		if ( empty( $context ) || $context != 'workmates' || empty( $search_terms ) ) {
 			return;
+		}
 
 		$like = $wpdb->prepare( "LIKE %s", '%'.$search_terms.'%' );
 
 		$user_query->uid_clauses['where'] .= " AND ( u.user_email {$like} OR u.display_name {$like} OR u.user_nicename {$like} )";
 	}
-
 }
 
 endif;

@@ -206,6 +206,10 @@ var wm = wm || {};
 
 			target.closest( '.workmates-users' ).removeClass( 'selected details' );
 
+			if ( $('#workmates-list li#uid-' + id ).length ) {
+				$('#workmates-list li#uid-' + id ).remove();
+			}
+
 			this.getSelection().remove( this.collection._byId[id] );
 
 			this.controller.state().props.trigger( 'change:selection' );
@@ -341,7 +345,7 @@ var wm = wm || {};
 			workmates_invites = '';
 
 			selection.each( function( model ) {
-				workmates_invites += '<li class="workmates-invited" id="uid-' + model.get( 'id' ) + '"> ' + "\n";
+				workmates_invites += '<li class="workmates-invited mine" id="uid-' + model.get( 'id' ) + '"> ' + "\n";
 				workmates_invites += '<input type="hidden" name="workmates[]" value="' + model.get( 'id' ) + '"/>';
 				workmates_invites += '<img src="' + model.get( 'avatar' ) + '" class="avatar" width="50px" heigh="50px">' + "\n";
 				workmates_invites += '<h4>' + model.get( 'name' ) + '</h4>'+ "\n";
@@ -407,6 +411,9 @@ var wm = wm || {};
 
 				disabled = !selection.length;
 
+				if ( disabled && ! $( '#workmates-list li.mine' ).length ) {
+					$( '#send-invite-form #submit' ).hide();
+				}
 			}
 
 			this.get( 'inserter' ).model.set( 'disabled', disabled );
@@ -553,6 +560,15 @@ var wm = wm || {};
 
 		clear: function( event ) {
 			event.preventDefault();
+
+			// Remove from the invite list if user is in
+			if ( this.collection.length ) {
+				this.collection.each( function( model ) {
+					if( $('#workmates-list li#uid-' + model.get( 'id' ) ).length ) {
+						$('#workmates-list li#uid-' + model.get( 'id' ) ).remove();
+					}
+				}, this );
+			}
 			this.collection.reset();
 			this.controller.state().props.trigger( 'change:selection' );
 		}
@@ -665,6 +681,8 @@ var wm = wm || {};
 			if( $( '#workmates-list li' ).length == 0 ) {
 				$( '#workmates-list' ).hide();
 				$( '#send-invite-form #submit' ).hide();
+			} else if( $( '#workmates-list li.mine' ).length == 0 ) {
+				$( '#send-invite-form #submit' ).hide();
 			}
 		},
 
@@ -696,8 +714,9 @@ var wm = wm || {};
 			var all = media.frame().state().props.get( '_all' ).get( 'mirror' );
 				selection = media.frame().state().props.get( '_all' ).get( 'selection' );
 
-			if( $( '#user-' + user_id ).length )
+			if( $( '#user-' + user_id ).length ) {
 				$( '#user-' + user_id ).closest( '.workmates-users' ).removeClass( 'selected details' );
+			}
 			
 			selection.remove( all._byId[user_id] );
 

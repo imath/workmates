@@ -45,7 +45,6 @@ ul#workmates-list h4 {
 	white-space: nowrap;
   	overflow: hidden;
   	text-overflow: ellipsis;
-	width:90%;
 }
 
 /**

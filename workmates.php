@@ -10,7 +10,7 @@
  * Plugin Name:       WorkMates
  * Plugin URI:        http://imathi.eu/tag/workmates/
  * Description:       Customizes BuddyPress on some behaviors (that i've needed) for its use in a company
- * Version:           1.0-beta1
+ * Version:           1.0-beta2
  * Author:            imath
  * Author URI:        http://imathi.eu
  * Text Domain:       rendez-vous
@@ -21,10 +21,10 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( !class_exists( 'WorkMates' ) ) :
+if ( ! class_exists( 'WorkMates' ) ) :
 /**
  * Main WorkMates Class
  *
@@ -53,12 +53,12 @@ class WorkMates {
 		'component_id'        => 'workmates',
 		'component_root_slug' => 'workmates',
 		'component_name'      => 'WorkMates',
-		'bp_version_required' => '1.9-beta2'
+		'bp_version_required' => '1.9'
 	);
 
 	/**
 	 * Initialize the plugin
-	 * 
+	 *
 	 * @package WorkMates
 	 * @since 1.0
 	 */
@@ -88,13 +88,13 @@ class WorkMates {
 
 	/**
 	 * Sets some globals for the plugin
-	 * 
+	 *
 	 * @package WorkMates
 	 * @since 1.0
 	 */
 	private function setup_globals() {
 		/** WorkMates globals ********************************************/
-		$this->version                = '1.0-beta1';
+		$this->version                = '1.0-beta2';
 		$this->domain                 = 'workmates';
 		$this->file                   = __FILE__;
 		$this->basename               = plugin_basename( $this->file );
@@ -120,7 +120,7 @@ class WorkMates {
 
 	/**
 	 * Checks BuddyPress version
-	 * 
+	 *
 	 * @package WorkMates
 	 * @since 1.0
 	 */
@@ -134,7 +134,7 @@ class WorkMates {
 
 	/**
 	 * Checks if current blog is the one where is activated BuddyPress
-	 * 
+	 *
 	 * @package WorkMates
 	 * @since 1.0
 	 */
@@ -146,13 +146,13 @@ class WorkMates {
 
 		if( $blog_id != bp_get_root_blog_id() )
 			return false;
-		
+
 		return true;
 	}
 
 	/**
 	 * Includes the needed files
-	 * 
+	 *
 	 * @package WorkMates
 	 * @since 1.0
 	 */
@@ -172,7 +172,7 @@ class WorkMates {
 
 	/**
 	 * Sets the key hooks to add an action or a filter to
-	 * 
+	 *
 	 * @package WorkMates
 	 * @since 1.0
 	 */
@@ -187,8 +187,9 @@ class WorkMates {
 		add_action( 'bp_messages_setup_globals', array( $this, 'autocomplete_all' )    );
 
 		//Filters
-		if( bp_is_active( 'groups' ) )
+		if( bp_is_active( 'groups' ) ) {
 			add_filter( 'groups_forbidden_names', array( $this, 'groups_forbidden_names' ), 10, 1 );
+		}
 
 		if( bp_is_active( 'messages' ) ) {
 			add_filter( 'bp_core_search_users_count_sql', 'workmates_filter_message_ac_count', 10, 1 );
@@ -201,10 +202,10 @@ class WorkMates {
 	 * In case friends component is inactive and message is active
 	 * defines autocomplete_all constant to true so that it's easier
 	 * to send a private message using the compose screen
-	 * 
+	 *
 	 * @package WorkMates
 	 * @since 1.0
-	 * 
+	 *
 	 * @uses buddypress() to get BuddyPress main instance
 	 * @uses bp_is_active() to check a component is active
 	 */
@@ -217,13 +218,13 @@ class WorkMates {
 
 	/**
 	 * Enqueues the js and css files only if WorkMates needs it
-	 * 
+	 *
 	 * The goal here is to get the built in WordPress media editor scripts
 	 * without plupload.
-	 * 
+	 *
 	 * @package WorkMates
 	 * @since 1.0
-	 * 
+	 *
 	 * @uses bp_is_active() to check if the BuddyPress Group component is active
 	 * @uses workmates_is_group_front() to check if we're in the invite workmates screen
 	 * @uses workmates_is_group_create() to check we're in the invite workmates create screen
@@ -240,26 +241,26 @@ class WorkMates {
 
 		if( workmates_is_group_front() || workmates_is_group_create() ) {
 			$suffix = SCRIPT_DEBUG ? '' : '.min';
-			
+
 			wp_register_script( 'workmates-plupload', includes_url( "js/plupload/wp-plupload$suffix.js" ), array(), $this->version, 1 );
 			wp_localize_script( 'workmates-plupload', 'pluploadL10n', array() );
 			wp_register_script( 'workmates-media-views', includes_url( "js/media-views$suffix.js" ), array( 'utils', 'media-models', 'workmates-plupload', 'jquery-ui-sortable' ), $this->version, 1 );
 			wp_register_script( 'workmates-media-editor', includes_url( "js/media-editor$suffix.js" ), array( 'shortcode', 'workmates-media-views' ), $this->version, 1 );
 			wp_register_script( 'workmates-modal', $this->plugin_js . "workmates-backbone$suffix.js", array( 'workmates-media-editor', 'jquery-ui-datepicker' ), $this->version, 1 );
-			
+
 			wp_enqueue_style( 'workmates-modal-css', $this->plugin_css . "workmates-editor$suffix.css", array(), $this->version );
 
 			// Enqueues a specific WP Media Editor (with no support for file upload)
 			workmates_enqueue_editor();
 		}
-		
+
 	}
 
 	/**
 	 * Adds our component name to group forbidden names
-	 * 
+	 *
 	 * Let's avoid troubles between WorkMates component user nav and group nav
-	 * 
+	 *
 	 * @package WorkMates
 	 * @since 1.0
 	 */
@@ -274,7 +275,7 @@ class WorkMates {
 	 *
 	 * @package WorkMates
 	 * @since 1.0
-	 * 
+	 *
 	 * @uses get_locale() to get the language of WordPress config
 	 * @uses load_texdomain() to load the translation if any is available for the language
 	 */
@@ -294,7 +295,7 @@ class WorkMates {
 		load_textdomain( $this->domain, $mofile_local );
 	}
 
-	
+
 }
 
 // Let's start !

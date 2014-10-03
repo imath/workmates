@@ -1,15 +1,15 @@
 <?php
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Enqueues the WorkMates editor scripts, css, settings and strings
- * 
+ *
  * Inspired by wp_enqueue_media()
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses bp_get_new_group_id() to get the group id while in create step
  * @uses bp_get_current_group_id() to get the group id
  * @uses wp_parse_args() to merge args with defaults
@@ -153,10 +153,10 @@ function workmates_enqueue_editor( $args = array() ) {
 
 /**
  * Trick to make the media-views works without plupload loaded
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @global $wp_scripts
  */
 function workmates_plupload_settings() {
@@ -187,10 +187,10 @@ function workmates_plupload_settings() {
 
 /**
  * The template needed for the WorkMates editor
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @global $wp_scripts
  */
 function workmates_media_templates() {

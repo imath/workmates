@@ -1,15 +1,15 @@
 <?php
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /* global functions */
 
 /**
  * Returns plugin version
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_plugin_version() {
@@ -18,10 +18,10 @@ function workmates_get_plugin_version() {
 
 /**
  * Returns plugin's dir
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_plugin_dir() {
@@ -30,10 +30,10 @@ function workmates_get_plugin_dir() {
 
 /**
  * Returns plugin's includes dir
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_includes_dir() {
@@ -42,10 +42,10 @@ function workmates_get_includes_dir() {
 
 /**
  * Returns plugin's includes url
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_includes_url() {
@@ -54,10 +54,10 @@ function workmates_get_includes_url() {
 
 /**
  * Returns plugin's js url
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_js_url() {
@@ -66,10 +66,10 @@ function workmates_get_js_url() {
 
 /**
  * Returns plugin's js url
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_css_url() {
@@ -78,10 +78,10 @@ function workmates_get_css_url() {
 
 /**
  * Returns plugin's component id
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_component_id() {
@@ -90,10 +90,10 @@ function workmates_get_component_id() {
 
 /**
  * Returns plugin's component slug
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses buddypress() BuddyPress main instance
  * @uses workmates() plugin's main instance
  */
@@ -104,10 +104,10 @@ function workmates_get_component_slug() {
 
 /**
  * Returns plugin's component name
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_component_name() {
@@ -116,10 +116,10 @@ function workmates_get_component_name() {
 
 /**
  * Returns plugin's Group component name
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_group_component_name() {
@@ -128,10 +128,10 @@ function workmates_get_group_component_name() {
 
 /**
  * Returns plugin's Group component slug
- * 
+ *
  * @package WorkMates
  * @since 1.0
- * 
+ *
  * @uses workmates() plugin's main instance
  */
 function workmates_get_group_component_slug() {
@@ -140,7 +140,7 @@ function workmates_get_group_component_slug() {
 
 /**
  * Are we on the group invite workmates screen ?
- * 
+ *
  * @package WorkMates
  * @since 1.0
  *
@@ -152,13 +152,13 @@ function workmates_get_group_component_slug() {
 function workmates_is_group_front() {
 	if( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( workmates_get_group_component_slug() ) )
 		return true;
-	
+
 	return false;
 }
 
 /**
  * Are we on the group invite workmates create screen ?
- * 
+ *
  * @package WorkMates
  * @since 1.0
  *
@@ -168,13 +168,13 @@ function workmates_is_group_front() {
 function workmates_is_group_create() {
 	if( bp_is_group_creation_step( workmates_get_group_component_slug() ) )
 		return true;
-	
+
 	return false;
 }
 
 /**
  * Prepare users before sending a json object to the WorkMates editor
- * 
+ *
  * @package WorkMates
  * @since 1.0
  *
@@ -185,13 +185,13 @@ function workmates_prepare_user_for_js( $users ) {
 	$response = array(
 		'id'           => intval( $users->ID ),
 		'name'         => $users->display_name,
-		'avatar'       => htmlspecialchars_decode( bp_core_fetch_avatar( array( 
-			'item_id' => $users->ID, 
-			'object' => 'user', 
-			'type' => 'full', 
+		'avatar'       => htmlspecialchars_decode( bp_core_fetch_avatar( array(
+			'item_id' => $users->ID,
+			'object' => 'user',
+			'type' => 'full',
 			'width' => 150,
 			'height' => 150,
-			'html' => false ) 
+			'html' => false )
 		) ),
 	);
 
@@ -200,7 +200,7 @@ function workmates_prepare_user_for_js( $users ) {
 
 /**
  * This is a copy of the BuddyPress function to send invites
- * 
+ *
  * @package WorkMates
  * @since 1.0
  *
@@ -220,17 +220,19 @@ function workmates_prepare_user_for_js( $users ) {
  */
 function workmates_group_invite() {
 
-	if ( !bp_is_single_item() )
+	if ( ! bp_is_single_item() ) {
 		return false;
+	}
 
 	$bp = buddypress();
 
 	if ( bp_is_action_variable( 'send', 0 ) ) {
 
-		if ( !check_admin_referer( 'workmates_send_invites', '_wpnonce_send_invites' ) )
+		if ( ! check_admin_referer( 'workmates_send_invites', '_wpnonce_send_invites' ) ) {
 			return false;
+		}
 
-		if ( !empty( $_POST['workmates'] ) ) {
+		if ( ! empty( $_POST['workmates'] ) ) {
 			foreach( (array) $_POST['workmates'] as $workmate ) {
 				groups_invite_user( array( 'user_id' => $workmate, 'group_id' => $bp->groups->current_group->id ) );
 			}
@@ -242,7 +244,7 @@ function workmates_group_invite() {
 		do_action( 'workmates_group_invite', $bp->groups->current_group->id );
 		bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
 
-	} elseif ( !bp_action_variable( 0 ) ) {
+	} elseif ( ! bp_action_variable( 0 ) ) {
 		// Show send invite page
 		bp_core_load_template( apply_filters( 'workmates_template_group_invite', 'groups/single/home' ) );
 
