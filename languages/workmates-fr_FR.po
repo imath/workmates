@@ -3,9 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WorkMates 1.0-beta1\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/workmates\n"
-"POT-Creation-Date: 2013-12-07 23:51:31+00:00\n"
-"PO-Revision-Date: 2013-12-08 00:52+0100\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/workmates\n"
+"POT-Creation-Date: 2014-12-11 09:02:27+00:00\n"
+"PO-Revision-Date: 2014-12-11 10:03+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -13,29 +13,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.7\n"
 
-#: includes/ajax.php:36
+#: includes/ajax.php:39
 msgid "Undefined group.."
 msgstr "Groupe inconnu.."
 
-#: includes/ajax.php:85
+#: includes/ajax.php:90
 msgid "User or Group id undefined"
 msgstr "Identifiant utilisateur ou groupe inconnu"
 
-#: includes/ajax.php:88
+#: includes/ajax.php:94
 msgid "You do not have permission to send or delete invites"
 msgstr ""
 "Vous n&#39;avez pas la permission d&#39;envoyer ou de supprimer des "
 "invitations"
 
-#: includes/ajax.php:96
+#: includes/ajax.php:103
 msgid "User is already member of this group."
 msgstr "L&#39;utilisateur est déjà membre du groupe."
 
-#: includes/ajax.php:100
+#: includes/ajax.php:108
 msgid "Something went wrong."
 msgstr "Erreur inconnue"
 
-#: includes/ajax.php:102 includes/screens.php:26
+#: includes/ajax.php:111 includes/screens.php:28
 msgid "Invite successfully removed"
 msgstr "Invitation supprimée avec succès"
 
@@ -197,7 +197,7 @@ msgstr "Précédent"
 msgid "%d to invite"
 msgstr "%d à inviter"
 
-#: includes/editor.php:132 includes/groups.php:211
+#: includes/editor.php:132 includes/groups.php:220
 msgid "Remove Invite"
 msgstr "Supprimer l&#39;invitation"
 
@@ -213,29 +213,33 @@ msgstr "Désectionner"
 msgid "Clear"
 msgstr "Annuler"
 
-#: includes/functions.php:241
+#: includes/functions.php:243
 msgid "Group invites sent."
 msgstr "Invitations de groupe envoyées."
 
-#: includes/groups.php:195
+#: includes/groups.php:202
 msgid "Select Workmates"
 msgstr "Sélectionner les collègues"
 
-#: includes/groups.php:234
+#: includes/groups.php:249
 msgid "Send Invites"
 msgstr "Envoyer les invitations"
 
-#: includes/screens.php:31
+#: includes/screens.php:33
 msgid "You are not allowed to send or remove invites"
 msgstr "Vous n&#39;êtes pas autorisé à envoyer ou supprimer des invitations"
 
-#: includes/screens.php:34
+#: includes/screens.php:36
 msgid "The member requested to join the group."
 msgstr "Le membre a déjà demandé à rejoindre le groupe"
 
-#: includes/screens.php:37
+#: includes/screens.php:39
 msgid "There was an error removing the invite"
 msgstr "Une erreur est survenue lors de la suppression de l&#39;invitation"
+
+#: includes/template.php:114
+msgid "Invited by:"
+msgstr "Invité par :"
 
 #. Plugin Name of the plugin/theme
 msgid "WorkMates"
