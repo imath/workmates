@@ -115,6 +115,11 @@ ul#workmates-list h4 {
 	border-color: #ddd;
 }
 
+.media-toolbar-secondary #member-type-filters {
+	margin-right:0;
+	margin-top: 15px;
+}
+
 .media-router .active,
 .media-router > a.active:last-child {
 	background: #fff;

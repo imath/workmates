@@ -73,6 +73,20 @@ function workmates_enqueue_editor( $args = array() ) {
 	$post = $hier = null;
 	$settings['group'] = intval( $args['group_id'] );
 
+	// Do we have member types ?
+	$workmates_member_types = array();
+	$member_types = bp_get_member_types( array(), 'objects' );
+	if ( ! empty( $member_types ) && is_array( $member_types ) ) {
+		$workmates_member_types['wmMemberTypesAll'] = esc_html__( 'All member types', 'workmates' );
+		foreach ( $member_types as $type_key => $type ) {
+			$workmates_member_types['wmMemberTypes'][] = array( 'type' => $type_key, 'text' => esc_html( $type->labels['singular_name'] ) );
+		}
+	}
+
+	if ( ! empty( $workmates_member_types ) ) {
+		$settings = array_merge( $settings, $workmates_member_types );
+	}
+
 	$strings = array(
 		// Generic
 		'url'         => __( 'URL', 'workmates' ),

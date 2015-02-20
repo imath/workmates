@@ -10,7 +10,7 @@
  * Plugin Name:       WorkMates
  * Plugin URI:        http://imathi.eu/tag/workmates/
  * Description:       Customizes BuddyPress on some behaviors (that i've needed) for its use in a company
- * Version:           1.0-beta2
+ * Version:           1.0-beta3
  * Author:            imath
  * Author URI:        http://imathi.eu
  * Text Domain:       rendez-vous
@@ -53,7 +53,7 @@ class WorkMates {
 		'component_id'        => 'workmates',
 		'component_root_slug' => 'workmates',
 		'component_name'      => 'WorkMates',
-		'bp_version_required' => '1.9'
+		'bp_version_required' => '2.2'
 	);
 
 	/**
@@ -94,7 +94,7 @@ class WorkMates {
 	 */
 	private function setup_globals() {
 		/** WorkMates globals ********************************************/
-		$this->version                = '1.0-beta2';
+		$this->version                = '1.0-beta3';
 		$this->domain                 = 'workmates';
 		$this->file                   = __FILE__;
 		$this->basename               = plugin_basename( $this->file );

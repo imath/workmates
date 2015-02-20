@@ -37,6 +37,7 @@ var wm = wm || {};
                     	group_id: wp.media.view.settings.group,
                     	page:this.options.current_page,
                     	search_terms: media.frame().state().get( 'search' ),
+                    	member_type: media.frame().state().get( 'member_type' ),
                     },
                     _wpnonce: wp.media.view.settings.nonce.workmates
                 });
@@ -98,6 +99,7 @@ var wm = wm || {};
 			this.collection.on( 'add error', this.displayUsers, this );
 
 			this.controller.state().on( 'change:search', this.updateContent, this );
+			this.controller.state().on( 'change:member_type', this.updateContent, this );
 			this.controller.state().on( 'change:pagination', this.updateContent, this );
 
 			this.getSelection().on( 'reset', this.clearItems, this );
@@ -246,13 +248,21 @@ var wm = wm || {};
 
 			this.views.add( this.sidebar );
 
-			this.sidebar.set( 'search', new media.view.WorkmatesSearch({
+			this.sidebar.set( 'search', new media.view.WorkmatesSearch( {
 					controller: this.controller,
 					collection: this.model.get( 'wmusers' ),
 					model:      this.model,
 					priority:   80,
-			}) );
+			} ) );
 
+			if( ! _.isUndefined( wp.media.view.settings.wmMemberTypes ) ){
+				this.sidebar.set( 'typeFilter', new media.view.WorkmatesTypeFilter( {
+					controller: this.controller,
+					collection: this.model.get( 'wmusers' ),
+					model:      this.model,
+					priority: -60
+				} ).render() );
+			}
 		},
 
 		createSteps:function() {
@@ -287,7 +297,8 @@ var wm = wm || {};
 					id:'wmtab'
 				} 
 			},
-			search: ''
+			search: '',
+			member_type:'',
 		},
 
 		initialize: function() {
@@ -502,6 +513,61 @@ var wm = wm || {};
 			this.collection.options.current_page = 1;
 
 			this.model.trigger( 'change:search' );
+		}
+	} );
+
+	media.view.WorkmatesTypeFilter = wp.media.view.AttachmentFilters.extend({
+		id: 'member-type-filters',
+
+		createFilters: function() {
+			var filters = {};
+			_.each( wp.media.view.settings.wmMemberTypes || {}, function( value, index ) {
+				filters[ index ] = {
+					text: value.text,
+					props: {
+						type: value.type,
+					}
+				};
+			} );
+			filters.all = {
+				text:  wp.media.view.settings.wmMemberTypesAll,
+				props: {
+					type:  false
+				},
+				priority: 10
+			};
+			this.filters = filters;
+		},
+
+		change: function() {
+			var filter = this.filters[ this.el.value ];
+			if ( filter ) {
+				this.model.set( 'member_type', filter.props.type );
+			} else {
+				this.model.unset( 'member_type' );
+			}
+
+			this.collection.options.current_page = 1;
+
+			this.model.trigger( 'change:member_type' );
+		},
+
+		select: function() {
+			var model = this.model,
+				value = 'all',
+				props = model.toJSON();
+
+			_.find( this.filters, function( filter, id ) {
+				var equal = _.all( filter.props, function( prop, key ) {
+					return prop === ( _.isUndefined( props.member_type ) ? null : props.member_type );
+				});
+
+				if ( equal ) {
+					return value = id;
+				}
+			});
+
+			this.$el.val( value );
 		}
 	} );
 
