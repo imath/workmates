@@ -17,8 +17,7 @@ Available in french and english.
 Configuration needed
 --------------------
 
-+ WordPress 3.7.1 and BuddyPress 1.9-beta2
-+ WordPress 3.8 RC and BuddyPress 1.9-beta2
++ WordPress 4.1.1 and BuddyPress 2.2.1
 
 Installation
 ------------
