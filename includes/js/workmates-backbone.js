@@ -112,12 +112,14 @@ var wm = wm || {};
 		},
 
 		removeContent: function() {
-	      	_.each( this.users, function( key ) {
-	      		key.remove();
-		    }, this );
+			_.each( this.users, function( key ) {
+				if ( ! _.isUndefined( key ) ) {
+					key.remove();
+				}
+			}, this );
 
-	      	this.users = [];
-	    },
+			this.users = [];
+		},
 
 		displayUsers:function( model ) {
 			var _this = this, 
