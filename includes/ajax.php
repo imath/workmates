@@ -36,6 +36,10 @@ function workmates_ajax_get_users() {
 		'context'      => 'workmates',
 	) );
 
+	if ( ! empty( $args['member_type'] ) && 'false' === $args['member_type'] ) {
+		$args['member_type'] = false;
+	}
+
 	if ( empty( $args['group_id'] ) ) {
 		wp_send_json_error( __( 'Undefined group..', 'workmates' ) );
 	}
