@@ -3,7 +3,7 @@
  * @buddypress-plugin
  * Plugin Name:       WorkMates
  * Plugin URI:        http://imathi.eu/tag/workmates/
- * Description:       Intègre l'interphace des invitations de groupe du pack de gabarits de Nouveau dans celui de l'héritage de BP Default.
+ * Description:       Intègre l'interface des invitations de groupe du pack de gabarits de Nouveau dans celui de l'héritage de BP Default.
  * Version:           2.0.0-alpha
  * Author:            imath
  * Author URI:        http://imathi.eu
