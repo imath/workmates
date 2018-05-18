@@ -252,3 +252,70 @@ function workmates_group_invite() {
 		bp_do_404();
 	}
 }
+
+if ( ! function_exists( 'bp_nouveau_single_item_subnav_classes' ) ) :
+/**
+ * Makes sure the function exists as it is used in the invites JS Template.
+ *
+ * @since 2.0.0
+ */
+function bp_nouveau_single_item_subnav_classes() {
+	echo 'group-subnav bp-invites-nav';
+}
+endif;
+
+if ( ! function_exists( 'bp_nouveau_search_default_text' ) ) :
+/**
+ * Makes sure the function exists as it is used in the invites JS Template.
+ *
+ * @since 2.0.0
+ */
+function bp_nouveau_search_default_text() {
+	esc_html_e( 'Rechercher un membre', 'workmates' );
+}
+endif;
+
+/**
+ * Temporarly replace the Legacy Stack by the Nouveau one.
+ *
+ * @since 2.0.0
+ *
+ * @param  array $stack A list of template locations.
+ * @return array        A list of template locations.
+ */
+function workmates_alter_template_stack( $stack = array() ) {
+	remove_filter( 'bp_get_template_stack', 'workmates_alter_template_stack', 10, 1 );
+
+	$legacy_path  = untrailingslashit( bp_get_theme_compat_dir() );
+	$nouveau_path = untrailingslashit( workmates()->tp_dir );
+
+	foreach ( $stack as $key => $path ) {
+		if ( 0 !== strpos( $path, $legacy_path ) ) {
+			continue;
+		}
+
+		$stack[ $key ] = str_replace( $legacy_path, $nouveau_path, $path );
+	}
+
+	return $stack;
+}
+
+/**
+ * Override the Send Invites template.
+ *
+ * @since 2.0.0
+ *
+ * @param  array  $templates The list of possible templates.
+ * @param  string $slug      The requested template.
+ * @return array             A new list of one specific template.
+ */
+function workmates_get_group_invites_template( $templates = array(), $slug = '' ) {
+	if ( 'groups/single/send-invites' !== $slug ) {
+		return $templates;
+	}
+
+	add_filter( 'bp_get_template_stack', 'workmates_alter_template_stack', 10, 1 );
+
+	return array( 'common/js-templates/invites/index.php' );
+}
+add_filter( 'bp_get_template_part', 'workmates_get_group_invites_template', 10, 2 );

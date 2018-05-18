@@ -176,6 +176,11 @@ class WorkMates {
 		}
 	}
 
+	/**
+	 * Display a notice if the required BuddyPress config is not available.
+	 *
+	 * @since 2.0.0
+	 */
 	public function deactivate_notice() {
 		?>
 		<div class="notice notice-error is-dismissible">
@@ -186,13 +191,25 @@ class WorkMates {
 		<?php
 	}
 
+	/**
+	 * Include and register BP Nouveau assets.
+	 *
+	 * @since 2.0.0
+	 */
 	public function get_nouveau_assets() {
-		if ( ! isset( buddypress()->theme_compat->packages['nouveau'] ) ) {
+		$bp = buddypress();
+
+		if ( ! isset( $bp->theme_compat->packages['nouveau'] ) || ! bp_is_active( 'groups' ) ) {
 			add_action( 'all_admin_notices', array( $this, 'deactivate_notice' ) );
 			return;
 		}
 
+		$this->tp_url = trailingslashit( $bp->theme_compat->packages['nouveau']->__get( 'url' ) );
+		$this->tp_dir = trailingslashit( $bp->theme_compat->packages['nouveau']->__get( 'dir' ) );
+
 		// Include needed BP Nouveau files
+		require $this->tp_dir . 'includes/groups/classes.php';
+		require $this->tp_dir . 'includes/groups/functions.php';
 	}
 
 	/**
@@ -216,6 +233,8 @@ class WorkMates {
 
 		//Filters
 		if ( bp_is_active( 'groups' ) ) {
+			add_action( 'groups_setup_nav', 'bp_nouveau_group_setup_nav' );
+			add_filter( 'groups_create_group_steps', 'bp_nouveau_group_invites_create_steps', 10, 1 );
 			add_filter( 'groups_forbidden_names', array( $this, 'groups_forbidden_names' ), 10, 1 );
 		}
 
