@@ -47,7 +47,6 @@ class WorkMates {
 		'component_id'        => 'workmates',
 		'component_root_slug' => 'workmates',
 		'component_name'      => 'WorkMates',
-		'bp_version_required' => '3.0'
 	);
 
 	/**
@@ -109,7 +108,6 @@ class WorkMates {
 		//Group specific
 		$this->group_component_name = 'Invite Workmates';
 		$this->group_component_slug = 'workmate-invites';
-
 	}
 
 	/**
@@ -117,14 +115,27 @@ class WorkMates {
 	 *
 	 * @package WorkMates
 	 * @since 1.0
+	 * @deprecated 2.0.0
 	 */
 	public static function buddypress_version_check() {
+		_deprecated_function( __METHOD__, '2.0.0' );
 		// taking no risk
 		if ( ! defined( 'BP_VERSION' ) ) {
 			return false;
 		}
 
-		return version_compare( BP_VERSION, self::$init_vars['bp_version_required'], '>=' );
+		return version_compare( BP_VERSION, '3.0', '>=' );
+	}
+
+	/**
+	 * Check BuddyPress required config is in place.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean True if required BuddyPress config is there. False otherwise.
+	 */
+	public function bp_config_check() {
+		return function_exists( 'bp_check_theme_template_pack_dependency' ) && 'legacy' === bp_get_theme_package_id();
 	}
 
 	/**
@@ -160,9 +171,28 @@ class WorkMates {
 		require $this->includes_dir . 'classes.php';
 		require $this->includes_dir . 'template.php';
 
-		if ( bp_is_active( 'groups' ) && ! bp_is_active( 'friends' ) && self::buddypress_version_check() ) {
+		if ( bp_is_active( 'groups' ) && ! bp_is_active( 'friends' ) && $this->bp_config_check() ) {
 			require $this->includes_dir . 'groups.php';
 		}
+	}
+
+	public function deactivate_notice() {
+		?>
+		<div class="notice notice-error is-dismissible">
+			<p>
+				<?php esc_html_e( 'La configuration actuelle de BuddyPress ne permet pas à Workmates de fonctionner. Désactivez cette extension ou revoyez votre configuration BuddyPress.', 'workmates' ); ?>
+			</p>
+		</div>
+		<?php
+	}
+
+	public function get_nouveau_assets() {
+		if ( ! isset( buddypress()->theme_compat->packages['nouveau'] ) ) {
+			add_action( 'all_admin_notices', array( $this, 'deactivate_notice' ) );
+			return;
+		}
+
+		// Include needed BP Nouveau files
 	}
 
 	/**
@@ -173,14 +203,16 @@ class WorkMates {
 	 */
 	private function setup_hooks() {
 		// Bail if BuddyPress version is not supported or current blog is not the one where BuddyPress is activated
-		if ( ! self::buddypress_version_check() || ! self::buddypress_site_check() ) {
+		if ( ! $this->bp_config_check() || ! self::buddypress_site_check() ) {
+			add_action( 'all_admin_notices', array( $this, 'deactivate_notice' ) );
 			return;
 		}
 
 		//Actions
-		add_action( 'bp_init',                   array( $this, 'load_textdomain'  ), 6 );
-		add_action( 'bp_enqueue_scripts',        array( $this, 'cssjs'            )    );
-		add_action( 'bp_messages_setup_globals', array( $this, 'autocomplete_all' )    );
+		add_action( 'bp_init',                   array( $this, 'load_textdomain'    ), 6 );
+		add_action( 'bp_setup_theme',            array( $this, 'get_nouveau_assets' )    );
+		add_action( 'bp_enqueue_scripts',        array( $this, 'cssjs'              )    );
+		add_action( 'bp_messages_setup_globals', array( $this, 'autocomplete_all'   )    );
 
 		//Filters
 		if ( bp_is_active( 'groups' ) ) {
