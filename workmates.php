@@ -165,15 +165,6 @@ class WorkMates {
 	private function includes() {
 		require $this->includes_dir . 'functions.php';
 		require $this->includes_dir . 'filters.php';
-		require $this->includes_dir . 'ajax.php';
-		require $this->includes_dir . 'screens.php';
-		require $this->includes_dir . 'editor.php';
-		require $this->includes_dir . 'classes.php';
-		require $this->includes_dir . 'template.php';
-
-		if ( bp_is_active( 'groups' ) && ! bp_is_active( 'friends' ) && $this->bp_config_check() ) {
-			require $this->includes_dir . 'groups.php';
-		}
 	}
 
 	/**
@@ -192,11 +183,11 @@ class WorkMates {
 	}
 
 	/**
-	 * Include and register BP Nouveau assets.
+	 * Include BP Nouveau files.
 	 *
 	 * @since 2.0.0
 	 */
-	public function get_nouveau_assets() {
+	public function get_nouveau_files() {
 		$bp = buddypress();
 
 		if ( ! isset( $bp->theme_compat->packages['nouveau'] ) || ! bp_is_active( 'groups' ) ) {
@@ -210,6 +201,30 @@ class WorkMates {
 		// Include needed BP Nouveau files
 		require $this->tp_dir . 'includes/groups/classes.php';
 		require $this->tp_dir . 'includes/groups/functions.php';
+
+		if ( wp_doing_ajax() ) {
+			require $this->tp_dir . 'includes/groups/ajax.php';
+		}
+	}
+
+	/**
+	 * Remove some Nouveau AJAX actions to prevent conflicts with Legacy.
+	 *
+	 * @since 2.0.0
+	 */
+	public function remove_extra_ajax_actions() {
+		$ajax_actions = array(
+			array( 'groups_filter'             => array( 'function' => 'bp_nouveau_ajax_object_template_loader', ) ),
+			array( 'groups_join_group'         => array( 'function' => 'bp_nouveau_ajax_joinleave_group',        ) ),
+			array( 'groups_leave_group'        => array( 'function' => 'bp_nouveau_ajax_joinleave_group',        ) ),
+			array( 'groups_request_membership' => array( 'function' => 'bp_nouveau_ajax_joinleave_group',        ) ),
+		);
+
+		foreach ( $ajax_actions as $ajax_action ) {
+			$action = key( $ajax_action );
+
+			remove_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
+		}
 	}
 
 	/**
@@ -225,17 +240,16 @@ class WorkMates {
 			return;
 		}
 
-		//Actions
-		add_action( 'bp_init',                   array( $this, 'load_textdomain'    ), 6 );
-		add_action( 'bp_setup_theme',            array( $this, 'get_nouveau_assets' )    );
-		add_action( 'bp_enqueue_scripts',        array( $this, 'cssjs'              )    );
-		add_action( 'bp_messages_setup_globals', array( $this, 'autocomplete_all'   )    );
+		add_action( 'bp_init',                   array( $this, 'load_textdomain'   ), 6 );
+		add_action( 'bp_setup_theme',            array( $this, 'get_nouveau_files' )    );
+		add_action( 'bp_enqueue_scripts',        array( $this, 'cssjs'             )    );
+		add_action( 'bp_messages_setup_globals', array( $this, 'autocomplete_all'  )    );
 
-		//Filters
 		if ( bp_is_active( 'groups' ) ) {
 			add_action( 'groups_setup_nav', 'bp_nouveau_group_setup_nav' );
 			add_filter( 'groups_create_group_steps', 'bp_nouveau_group_invites_create_steps', 10, 1 );
-			add_filter( 'groups_forbidden_names', array( $this, 'groups_forbidden_names' ), 10, 1 );
+
+			add_action( 'admin_init', array( $this, 'remove_extra_ajax_actions' ), 20 );
 		}
 
 		if ( bp_is_active( 'messages' ) ) {
@@ -269,49 +283,43 @@ class WorkMates {
 	 *
 	 * @package WorkMates
 	 * @since 1.0
-	 *
-	 * @uses bp_is_active() to check if the BuddyPress Group component is active
-	 * @uses workmates_is_group_front() to check if we're in the invite workmates screen
-	 * @uses workmates_is_group_create() to check we're in the invite workmates create screen
-	 * @uses wp_register_script() to register a new script
-	 * @uses wp_localize_script() to attach some vars to it
-	 * @uses wp_enqueue_script() to safely add our script to WordPress queue
-	 * @uses wp_enqueue_style() to safely add our style to WordPress queue
-	 * @uses workmates_enqueue_editor() to load a specific version of WP Media Editor
+	 * @since 2.0.0 Use the BP Nouveau Group Invites UI.
 	 */
 	public function cssjs() {
 		if ( ! bp_is_active( 'groups' ) ) {
 			return;
 		}
 
-		if ( workmates_is_group_front() || workmates_is_group_create() ) {
-			$suffix = SCRIPT_DEBUG ? '' : '.min';
-
-			wp_register_script( 'workmates-plupload', includes_url( "js/plupload/wp-plupload$suffix.js" ), array(), $this->version, 1 );
-			wp_localize_script( 'workmates-plupload', 'pluploadL10n', array() );
-			wp_register_script( 'workmates-media-views', includes_url( "js/media-views$suffix.js" ), array( 'utils', 'media-models', 'workmates-plupload', 'jquery-ui-sortable' ), $this->version, 1 );
-			wp_register_script( 'workmates-media-editor', includes_url( "js/media-editor$suffix.js" ), array( 'shortcode', 'workmates-media-views' ), $this->version, 1 );
-			wp_register_script( 'workmates-modal', $this->plugin_js . "workmates-backbone$suffix.js", array( 'workmates-media-editor', 'jquery-ui-datepicker' ), $this->version, 1 );
-
-			wp_enqueue_style( 'workmates-modal-css', $this->plugin_css . "workmates-editor$suffix.css", array(), $this->version );
-
-			// Enqueues a specific WP Media Editor (with no support for file upload)
-			workmates_enqueue_editor();
+		if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
+			return;
 		}
-	}
 
-	/**
-	 * Adds our component name to group forbidden names
-	 *
-	 * Let's avoid troubles between WorkMates component user nav and group nav
-	 *
-	 * @package WorkMates
-	 * @since 1.0
-	 */
-	public function groups_forbidden_names( $forbidden = array() ) {
-		$forbidden = array_merge( $forbidden, array( $this->component_slug, $this->component_name ) );
+		// Get script.
+		$scripts = bp_nouveau_groups_register_scripts( array(
+			'bp-nouveau' => array(),
+		) );
 
-		return $forbidden;
+		// Bail if no scripts
+		if ( ! isset( $scripts['bp-nouveau-group-invites'] ) ) {
+			return;
+		}
+
+		$script = $scripts['bp-nouveau-group-invites'];
+		array_shift( $script['dependencies'] );
+
+		wp_enqueue_script(
+			'bp-nouveau-group-invites',
+			$this->tp_url . '/' . sprintf( $script['file'], '' ),
+			$script['dependencies'],
+			$this->version,
+			$script['footer']
+		);
+
+		wp_localize_script( 'bp-nouveau-group-invites', 'BP_Nouveau', bp_nouveau_groups_localize_scripts( array(
+			'nonces' => array(
+				'groups' => wp_create_nonce( 'bp_nouveau_groups' ),
+			) )
+		) );
 	}
 
 	/**
