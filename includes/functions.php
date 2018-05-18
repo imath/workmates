@@ -253,6 +253,82 @@ function workmates_group_invite() {
 	}
 }
 
+/**
+ * Add the Group Invite messages to the Groups Loop into the User's invites sceen.
+ *
+ * @since  2.0.0
+ *
+ * @param  boolean            $has_groups True if Groups were found. False otherwise.
+ * @param  BP_Groups_Template $g_template The Groups loop Object
+ * @param  array              $r          The Loop's queried arguments.
+ * @return boolean                        True if Groups were found. False otherwise.
+ */
+function workmates_attach_group_invites_message( $has_groups = true, BP_Groups_Template $g_template, $r = array() ) {
+	if ( ! isset( $r['type'] ) || 'invites' !== $r['type'] || empty( $g_template->groups ) ) {
+		return $has_groups;
+	}
+
+	global $wpdb, $groups_template;
+	$bp = buddypress();
+
+	$gids = wp_list_pluck( $g_template->groups, 'id' );
+	$group_list = implode( ',', wp_parse_id_list( $gids ) );
+	$where = array(
+		"group_id IN ({$group_list})",
+		$wpdb->prepare( 'user_id = %d AND is_confirmed = 0', bp_loggedin_user_id() ),
+	);
+
+	$messages = $wpdb->get_results( "SELECT group_id, comments FROM {$bp->groups->table_name_members} WHERE " . implode( ' AND ', $where ), OBJECT_K );
+
+	foreach ( $groups_template->groups as $k => $group ) {
+		$g = (int) $group->id;
+
+		if ( ! isset( $messages[$g] ) ) {
+			continue;
+		}
+
+		$groups_template->groups[$k]->invite_message = $messages[$g]->comments;
+	}
+
+	return $has_groups;
+}
+add_filter( 'bp_has_groups', 'workmates_attach_group_invites_message', 10, 3 );
+
+/**
+ * Outputs the Invite message into the User's group invites loop.
+ *
+ * @since  2.0.0
+ */
+function workmates_output_group_invites_message() {
+	global $groups_template;
+
+	if ( empty( $groups_template->group->invite_message ) ) {
+		return;
+	}
+
+	printf( '<h5>%1$s</h5><p>%2$s</p>',
+		__( 'Message d\'invitation', 'workmates' ),
+		wp_kses( $groups_template->group->invite_message, array() )
+	);
+}
+add_action( 'bp_group_invites_item', 'workmates_output_group_invites_message' );
+
+/**
+ * Saves the invite message into the Group Members table.
+ *
+ * @since  2.0.0
+ *
+ * @param  BP_Groups_Member $group_member The group member object.
+ */
+function workmates_group_invites_save_message( BP_Groups_Member $group_member ) {
+	$bp = buddypress();
+
+	if ( isset( $bp->groups->invites_message ) ) {
+		$group_member->comments = $bp->groups->invites_message;
+	}
+}
+add_filter( 'groups_member_before_save', 'workmates_group_invites_save_message', 10, 1 );
+
 if ( ! function_exists( 'bp_nouveau_single_item_subnav_classes' ) ) :
 /**
  * Makes sure the function exists as it is used in the invites JS Template.
@@ -274,6 +350,17 @@ function bp_nouveau_search_default_text() {
 	esc_html_e( 'Rechercher un membre', 'workmates' );
 }
 endif;
+
+/**
+ * Wraper to toggle return 0 in filters.
+ *
+ * @since  2.0.0
+ *
+ * @return integer 0
+ */
+function workmates_return_zero() {
+	return __return_zero();
+}
 
 /**
  * Temporarly replace the Legacy Stack by the Nouveau one.
@@ -301,6 +388,18 @@ function workmates_alter_template_stack( $stack = array() ) {
 }
 
 /**
+ * Use the Group Invites JS Templates in the Group "Invite" create step.
+ *
+ * @since 2.0.0
+ */
+function workmates_get_group_create_invites_template() {
+	add_filter( 'bp_get_template_stack', 'workmates_alter_template_stack', 10, 1 );
+	remove_filter( 'bp_get_total_friend_count', 'workmates_return_zero' );
+
+	bp_get_template_part( 'common/js-templates/invites/index' );
+}
+
+/**
  * Override the Send Invites template.
  *
  * @since 2.0.0
@@ -310,7 +409,13 @@ function workmates_alter_template_stack( $stack = array() ) {
  * @return array             A new list of one specific template.
  */
 function workmates_get_group_invites_template( $templates = array(), $slug = '' ) {
-	if ( 'groups/single/send-invites' !== $slug ) {
+	if ( 'groups/single/send-invites' !== $slug && ! ( 'groups/create' === $slug && bp_is_group_creation_step( 'group-invites' ) ) ) {
+		return $templates;
+	}
+
+	if ( bp_is_group_creation_step( 'group-invites' ) ) {
+		add_filter( 'bp_get_total_friend_count', 'workmates_return_zero' );
+		add_action( 'groups_custom_create_steps', 'workmates_get_group_create_invites_template' );
 		return $templates;
 	}
 
