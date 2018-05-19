@@ -1,0 +1,42 @@
+{
+	"author": "imath",
+	"bugs": {
+		"url": "https://github.com/imath/workmates/issues"
+	},
+	"description": "WorkMates Brings BP Nouveau Group Invites UI into BP Legacy.",
+	"devDependencies": {
+		"grunt": "^1.0.2",
+		"grunt-check-dependencies": "~1.0.0",
+		"grunt-checktextdomain": "~1.0.1",
+		"grunt-contrib-clean": "~1.1.0",
+		"grunt-contrib-copy": "~1.0.0",
+		"grunt-contrib-cssmin": "^2.2.1",
+		"grunt-contrib-imagemin": "~1.0.1",
+		"grunt-contrib-jshint": "~1.1.0",
+		"grunt-contrib-uglify": "~3.0.1",
+		"grunt-contrib-watch": "~1.0.0",
+		"grunt-exec": "~2.0.0",
+		"grunt-jsvalidate": "~0.2.2",
+		"grunt-legacy-util": "^1.0.0",
+		"grunt-wp-i18n": "^1.0.2",
+		"grunt-git-archive": "~0.0.3",
+		"matchdep": "~1.0.1"
+	},
+	"engines": {
+		"node": ">=6.9.1"
+	},
+	"keywords": [
+		"buddypress",
+		"groups",
+		"invites"
+	],
+	"homepage": "https://github.com/imath/workmates",
+	"license": "GPL-2.0-or-later",
+	"name": "workmates",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/imath/workmates"
+	},
+	"version": "2.0.0-alpha",
+	"dependencies": {}
+}

@@ -96,6 +96,7 @@ class WorkMates {
 		$this->lang_dir               = trailingslashit( $this->plugin_dir . 'languages' );
 		$this->includes_dir           = trailingslashit( $this->plugin_dir . 'includes' );
 		$this->includes_url           = trailingslashit( $this->plugin_url . 'includes' );
+		$this->assets_url             = trailingslashit( $this->plugin_url . 'assets' );
 		$this->plugin_js              = trailingslashit( $this->includes_url . 'js' );
 		$this->plugin_css             = trailingslashit( $this->includes_url . 'css' );
 
@@ -304,12 +305,21 @@ class WorkMates {
 			return;
 		}
 
+		$min = '';
+
+		wp_enqueue_style(
+			'workmates-group-invites',
+			sprintf( '%1$sstyle%2$s.css', $this->assets_url . 'css/', $min ),
+			array( 'dashicons' ),
+			$this->version
+		);
+
 		$script = $scripts['bp-nouveau-group-invites'];
 		array_shift( $script['dependencies'] );
 
 		wp_enqueue_script(
 			'bp-nouveau-group-invites',
-			$this->tp_url . '/' . sprintf( $script['file'], '' ),
+			$this->tp_url . '/' . sprintf( $script['file'], $min ),
 			$script['dependencies'],
 			$this->version,
 			$script['footer']
