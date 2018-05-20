@@ -326,12 +326,20 @@ class WorkMates {
 		$script = $scripts['bp-nouveau-group-invites'];
 		array_shift( $script['dependencies'] );
 
-		wp_enqueue_script(
+		wp_register_script(
 			'bp-nouveau-group-invites',
 			$this->tp_url . '/' . sprintf( $script['file'], $min ),
 			$script['dependencies'],
 			$this->version,
 			$script['footer']
+		);
+
+		wp_enqueue_script(
+			'workmates-group-invites',
+			$this->assets_url . sprintf( '/js/script%s.js', $min ),
+			array( 'bp-nouveau-group-invites' ),
+			$this->version,
+			true
 		);
 
 		$localized_data = bp_nouveau_groups_localize_scripts( array(
