@@ -329,6 +329,37 @@ function workmates_group_invites_save_message( BP_Groups_Member $group_member ) 
 }
 add_filter( 'groups_member_before_save', 'workmates_group_invites_save_message', 10, 1 );
 
+/**
+ * Makes sure the Group Invites message is appended to the email sent.
+ *
+ * @since  2.0.0
+ *
+ * @param  WP_Post  $post  The post object containing html & plain email text.
+ * @param  BP_Email $email The email (object) about to be sent.
+ * @return WP_Post         The post object containing html & plain email text.
+ */
+function workmates_group_invites_set_message( WP_Post $post, BP_Email $email ) {
+	$bp = buddypress();
+
+	if ( empty( $bp->groups->invites_message ) || ! $post->ID ) {
+		return $post;
+	}
+
+	$email_types = wp_get_object_terms( $post->ID, bp_get_email_tax_type(), array( 'fields' => 'names' ) );
+	$email_type  = reset( $email_types );
+
+	if ( 'groups-invitation' !== $email_type ) {
+		return $post;
+	}
+
+	$message = sprintf( __( 'Message d’invitation : %s', 'workmates' ), wp_strip_all_tags( $bp->groups->invites_message ) );
+	$post->post_content .= "\n" . $message;
+	$post->post_excerpt .= "\n\n" . $message;
+
+	return $post;
+}
+add_filter( 'bp_email_set_post_object', 'workmates_group_invites_set_message', 10, 2 );
+
 if ( ! function_exists( 'bp_nouveau_single_item_subnav_classes' ) ) :
 /**
  * Makes sure the function exists as it is used in the invites JS Template.
