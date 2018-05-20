@@ -285,3 +285,16 @@ function workmates_get_group_invites_template( $templates = array(), $slug = '' 
 	return array( 'common/js-templates/invites/index.php' );
 }
 add_filter( 'bp_get_template_part', 'workmates_get_group_invites_template', 10, 2 );
+
+/**
+ * Override the POST object to allow member type filtering.
+ *
+ * @since  2.0.0
+ */
+function workmates_get_group_potential_member_type_invites() {
+	if ( isset( $_POST['scope'] ) && 0 === strpos( $_POST['scope'], '_wm_mt_' ) ) {
+		$_POST['member_type'] = str_replace( '_wm_mt_', '', $_POST['scope'] );
+		$_POST['scope']       = 'members';
+	}
+}
+add_action( 'wp_ajax_groups_get_group_potential_invites', 'workmates_get_group_potential_member_type_invites', 9 );

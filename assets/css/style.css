@@ -340,6 +340,10 @@ body.group-create.group-invites #message.info {
 	display: none;
 }
 
+#buddypress #group-invites-container ul.subnav li a[data-nav^="_wm_mt_"] {
+	padding-left: 2em;
+}
+
 @media screen and (min-width: 37.5em) {
 	#buddypress .bp-invites-content ul.item-list > li {
 		-webkit-box-sizing: border-box;

@@ -329,11 +329,36 @@ class WorkMates {
 			$script['footer']
 		);
 
-		wp_localize_script( 'bp-nouveau-group-invites', 'BP_Nouveau', bp_nouveau_groups_localize_scripts( array(
+		$localized_data = bp_nouveau_groups_localize_scripts( array(
 			'nonces' => array(
 				'groups' => wp_create_nonce( 'bp_nouveau_groups' ),
 			) )
-		) );
+		);
+
+		// Use member types to add new filters to the Group Invites UI.
+		$member_types = bp_get_member_types( array(), 'objects' );
+		$order        = 5;
+
+		if ( ! empty( $member_types ) && is_array( $member_types ) ) {
+			foreach ( $member_types as $type_key => $type ) {
+				$order += 1;
+
+				$localized_data['group_invites']['nav'][] = array(
+					'id'      => '_wm_mt_' . $type_key,
+					'caption' => esc_html( $type->labels['name'] ),
+					'order'   => $order,
+				);
+			}
+
+			// Reorder the nav !
+			$localized_data['group_invites']['nav'] = bp_sort_by_key(
+				$localized_data['group_invites']['nav'],
+				'order',
+				'num'
+			);
+		}
+
+		wp_localize_script( 'bp-nouveau-group-invites', 'BP_Nouveau', $localized_data );
 	}
 
 	/**
