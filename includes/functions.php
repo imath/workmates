@@ -298,3 +298,53 @@ function workmates_get_group_potential_member_type_invites() {
 	}
 }
 add_action( 'wp_ajax_groups_get_group_potential_invites', 'workmates_get_group_potential_member_type_invites', 9 );
+
+/**
+ * Save the group invites setting for the displayed user.
+ *
+ * NB: This is only available if the Friends component is active.
+ *
+ * @since 2.0.0
+ * @todo  move this into a file only loaded if the friends component is active
+ */
+function workmates_member_invites_visibility_handler() {
+	if ( ! isset( $_POST['member-group-invites-submit'] ) ) {
+		return;
+	}
+
+	bp_nouveau_groups_screen_invites_restriction();
+}
+add_action( 'bp_screens', 'workmates_member_invites_visibility_handler' );
+
+/**
+ * Output the form to let the user removes himself from the all members tab.
+ *
+ * NB: This is only available if the Friends component is active.
+ *
+ * @since 2.0.0
+ * @todo  move this into a file only loaded if the friends component is active
+ */
+function workmates_member_invites_visibility_setting() {
+	if ( ! bp_is_user() || ! bp_is_current_component( 'settings' ) || ! bp_is_current_action( 'invites' ) ) {
+		return;
+	}
+
+	$group_invites_setting = (int) bp_get_user_meta( bp_displayed_user_id(), '_bp_nouveau_restrict_invites_to_friends' );
+	?>
+	<form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/invites/' ); ?>" name="account-group-invites-form" id="account-group-invites-form" class="standard-form" method="post">
+
+		<label for="account-group-invites-preferences">
+			<input type="checkbox" name="account-group-invites-preferences" id="account-group-invites-preferences" value="1" <?php checked( 1, $group_invites_setting ); ?>/>
+				<?php esc_html_e( 'Je souhaite restreindre les invitations de groupe à mes amis uniquement.', 'workmates' ); ?>
+		</label>
+
+		<div class="submit">
+			<input type="submit" value="<?php esc_attr_e( 'Enregistrer les modifications', 'workmates' ); ?>" id="member-group-invites" name="member-group-invites-submit" />
+		</div>
+
+		<?php wp_nonce_field( 'bp_nouveau_group_invites_settings' ); ?>
+
+	</form>
+	<?php
+}
+add_action( 'bp_template_content', 'workmates_member_invites_visibility_setting' );

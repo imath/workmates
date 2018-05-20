@@ -255,6 +255,11 @@ class WorkMates {
 			add_filter( 'groups_create_group_steps', 'bp_nouveau_group_invites_create_steps', 10, 1 );
 
 			add_action( 'admin_init', array( $this, 'remove_extra_ajax_actions' ), 20 );
+
+			if ( bp_is_active( 'friends' ) ) {
+				add_action( 'bp_settings_setup_nav', 'bp_nouveau_groups_invites_restriction_nav' );
+				add_filter( 'bp_settings_admin_nav', 'bp_nouveau_groups_invites_restriction_admin_nav', 10, 1 );
+			}
 		}
 
 		if ( bp_is_active( 'messages' ) ) {
