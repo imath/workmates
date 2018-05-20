@@ -15,7 +15,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 
 if ( ! class_exists( 'WorkMates' ) ) :
@@ -166,6 +166,10 @@ class WorkMates {
 	private function includes() {
 		require $this->includes_dir . 'functions.php';
 		require $this->includes_dir . 'filters.php';
+
+		if ( WP_DEBUG ) {
+			require $this->includes_dir . 'deprecated.php';
+		}
 	}
 
 	/**
@@ -343,17 +347,17 @@ class WorkMates {
 	 */
 	public function load_textdomain() {
 		// Traditional WordPress plugin locale filter
-		$locale        = apply_filters( 'plugin_locale', get_locale(), $this->domain );
-		$mofile        = sprintf( '%1$s-%2$s.mo', $this->domain, $locale );
+		$locale = apply_filters( 'plugin_locale', get_locale(), $this->domain );
+		$mofile = sprintf( '%1$s-%2$s.mo', $this->domain, $locale );
 
 		// Setup paths to current locale file
 		$mofile_local  = $this->lang_dir . $mofile;
-		$mofile_global = WP_LANG_DIR . '/rendez-vous/' . $mofile;
+		$mofile_global = WP_LANG_DIR . '/workmates/' . $mofile;
 
-		// Look in global /wp-content/languages/rendez-vous folder
+		// Look in global /wp-content/languages/workmates folder
 		load_textdomain( $this->domain, $mofile_global );
 
-		// Look in local /wp-content/plugins/rendez-vous/languages/ folder
+		// Look in local /wp-content/plugins/workmates/languages/ folder
 		load_textdomain( $this->domain, $mofile_local );
 	}
 
