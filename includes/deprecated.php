@@ -140,7 +140,6 @@ function workmates_media_templates() {
 	return;
 }
 
-
 /**
  * Returns plugin's component id
  *
@@ -355,7 +354,6 @@ class WorkMates_Invites_Group extends BP_Group_Extension {
 		_deprecated_function( __METHOD__, '2.0.0' );
 		return false;
 	}
-
 }
 
 /**

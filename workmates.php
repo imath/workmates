@@ -17,7 +17,6 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-
 if ( ! class_exists( 'WorkMates' ) ) :
 /**
  * Main WorkMates Class
