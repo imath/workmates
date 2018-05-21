@@ -10,6 +10,19 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Returns plugin's includes url
+ *
+ * @package WorkMates
+ * @since 1.0
+ * @deprecated 2.0.0
+ *
+ * @uses workmates() plugin's main instance
+ */
+function workmates_get_includes_url() {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+}
+
+/**
  * Returns the available members (not invited and not member of the group) to WorkMates Editor
  *
  * @package WorkMates
