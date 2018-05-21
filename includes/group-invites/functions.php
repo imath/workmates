@@ -9,6 +9,11 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Include BP Nouveau files.
+ *
+ * @since 2.0.0
+ */
 function workmates_get_nouveau_messages_files() {
 	$bp = buddypress();
 	$wm = workmates();
@@ -30,6 +35,11 @@ function workmates_get_nouveau_messages_files() {
 	}
 }
 
+/**
+ * Register/Enqueues JS/CSS asset for the Nouveau Group Invites UI.
+ *
+ * @since 2.0.0
+ */
 function workmates_enqueue_nouveau_messages_cssjs() {
 	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
 		return;
@@ -105,6 +115,11 @@ function workmates_enqueue_nouveau_messages_cssjs() {
 	wp_localize_script( 'bp-nouveau-group-invites', 'BP_Nouveau', $localized_data );
 }
 
+/**
+ * Remove some Nouveau AJAX actions to prevent conflicts with Legacy.
+ *
+ * @since 2.0.0
+ */
 function workmates_remove_group_invites_ajax_actions() {
 	$ajax_actions = array(
 		array( 'groups_filter'             => array( 'function' => 'bp_nouveau_ajax_object_template_loader', ) ),

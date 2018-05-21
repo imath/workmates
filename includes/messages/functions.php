@@ -24,9 +24,8 @@ function workmates_messages_autocomplete_all() {
  * @package WorkMates
  * @since 1.0
  *
- * @uses buddypress() to get BuddyPress main instance
- * @uses bp_is_active() to check the component is active
- * @return string the filtered count query
+ * @param  string $sql The SQL query to count the matching users.
+ * @return string      Unchanged or filtered count query.
  */
 function workmates_filter_message_ac_count( $sql = '' ) {
 	global $wpdb;
@@ -51,9 +50,10 @@ function workmates_filter_message_ac_count( $sql = '' ) {
  * @package WorkMates
  * @since 1.0
  *
- * @uses buddypress() to get BuddyPress main instance
- * @uses bp_is_active() to check the component is active
- * @return string the filtered select query
+ * @param  string  $sql          The SQL query to select the matching users.
+ * @param  string  $search_terms The autocomplete search characters.
+ * @param  integer $pag_sql      The SQL offset.
+ * @return string                Unchanged or the filtered select query.
  */
 function workmates_filter_message_ac_select( $sql = '', $search_terms = '', $pag_sql = 1 ) {
 	global $wpdb;

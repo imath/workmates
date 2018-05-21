@@ -128,8 +128,6 @@ class WorkMates {
 		if ( WP_DEBUG ) {
 			require $this->includes_dir . 'deprecated.php';
 		}
-
-
 	}
 
 	/**
@@ -150,9 +148,7 @@ class WorkMates {
 	 *
 	 * @package WorkMates
 	 * @since 1.0
-	 *
-	 * @uses buddypress() to get BuddyPress main instance
-	 * @uses bp_is_active() to check a component is active
+	 * @deprecated 2.0.0
 	 */
 	public function autocomplete_all( ) {
 		_deprecated_function( __METHOD__, '2.0.0' );
