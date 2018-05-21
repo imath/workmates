@@ -48,6 +48,3 @@ if ( bp_is_active( 'messages' ) ) {
 		add_action( 'bp_messages_setup_globals', 'workmates_messages_autocomplete_all' );
 	}
 }
-
-// Translations
-add_action( 'bp_init', 'workmates_load_textdomain', 6 );

@@ -2,14 +2,14 @@
 /**
  * @buddypress-plugin
  * Plugin Name:       WorkMates
- * Plugin URI:        http://imathi.eu/tag/workmates/
+ * Plugin URI:        https://imathi.eu/tag/workmates/
  * Description:       Intègre l'interface des invitations de groupe du pack de gabarits de Nouveau dans celui de l'héritage de BP Default.
  * Version:           2.0.0-alpha
  * Author:            imath
- * Author URI:        http://imathi.eu
+ * Author URI:        https://imathi.eu
  * Text Domain:       workmates
  * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       /languages/
  * GitHub Plugin URI: https://github.com/imath/workmates
  */

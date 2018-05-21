@@ -110,7 +110,7 @@ function workmates_deactivate_notice() {
 	?>
 	<div class="notice notice-error is-dismissible">
 		<p>
-			<?php esc_html_e( 'La configuration actuelle de BuddyPress ne permet pas à Workmates de fonctionner. Désactivez cette extension ou revoyez votre configuration BuddyPress.', 'workmates' ); ?>
+			<?php esc_html_e( 'La configuration actuelle de BuddyPress ne permet pas à WorkMates de fonctionner. Désactivez cette extension ou revoyez votre configuration BuddyPress.', 'workmates' ); ?>
 		</p>
 	</div>
 	<?php
@@ -162,3 +162,4 @@ function workmates_load_textdomain() {
 
 	load_plugin_textdomain( $wm->domain, false, trailingslashit( basename( $wm->plugin_dir ) ) . 'languages' );
 }
+add_action( 'bp_init', 'workmates_load_textdomain', 6 );
