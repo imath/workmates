@@ -154,6 +154,26 @@ body.group-create.group-invites #message.info {
 	content: "\f468";
 }
 
+#group-invites-container .bp-invites-filters ul li a {
+	border: 1px solid #ccc;
+	display: inline-block;
+}
+
+#group-invites-container .subnav-filters:before,
+#group-invites-container .subnav-filters:after {
+	content: " ";
+	display: table;
+}
+
+#group-invites-container .subnav-filters:after {
+	clear: both;
+}
+
+#buddypress .bp-invites-content ul.item-list li .item-avatar img {
+	width: 50px;
+	height: 50px;
+}
+
 #buddypress .bp-invites-content ul.item-list li .action button.invite-button,
 #buddypress .bp-invites-content ul.item-list li .action button.invite-button:focus {
 	background-color: #fff;
@@ -274,18 +294,20 @@ body.group-create.group-invites #message.info {
 	color: #767676;
 }
 
-#buddypress .bp-invites-content li ul.group-inviters {
+#buddypress .bp-invites-content ul.item-list li ul.group-inviters {
 	clear: both;
 	margin: 0;
-	overflow: hidden;
+	display: table;
 	padding-left: 0;
+	width: 100%;
 }
 
 #buddypress .bp-invites-content li ul.group-inviters li {
 	border: 0;
 	float: left;
+	display: table-cell;
 	font-size: 90%;
-	width: inherit;
+	width: auto;
 }
 
 #buddypress .bp-invites-content li .status {
@@ -371,6 +393,16 @@ body.group-create.group-invites #message.info {
 		width: auto;
 		padding: 0;
 		padding-right: 2em;
+	}
+
+	#group-invites-container .subnav-filters .group-invites-search {
+		float: left;
+	}
+
+	#group-invites-container .subnav-filters .last {
+		float: right;
+		margin-top: 0;
+		width: auto;
 	}
 
 	#group-invites-container {
