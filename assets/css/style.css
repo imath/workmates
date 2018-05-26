@@ -203,7 +203,11 @@ body.group-create.group-invites #message.info {
 
 #buddypress #group-invites-container {
 	margin: 1em 0;
-	overflow: hidden;
+}
+
+#buddypress #group-invites-container input[type="search"] {
+	display: inline;
+	width: auto;
 }
 
 #buddypress .group-invites-column {
@@ -251,6 +255,8 @@ body.group-create.group-invites #message.info {
 }
 
 #buddypress .bp-invites-content ul.item-list {
+	display: table;
+	overflow: auto;
 	border-top: 0;
 }
 
@@ -262,6 +268,7 @@ body.group-create.group-invites #message.info {
 	position: relative;
 	width: auto;
 	display: table;
+	overflow: auto !important;
 }
 
 #buddypress .bp-invites-content ul.item-list li .list-title {
@@ -275,11 +282,12 @@ body.group-create.group-invites #message.info {
 	right: 10px;
 }
 
-#buddypress .bp-invites-content ul.item-list li .action a.button.invite-button {
+#buddypress .bp-invites-content ul.item-list li .action button.invite-button {
 	border: 0;
+	padding: 0.5em 0.8em;
 }
 
-#buddypress .bp-invites-content ul.item-list li .action a.button.invite-button:focus, #buddypress .bp-invites-content ul.item-list li .action a.button.invite-button:hover {
+#buddypress .bp-invites-content ul.item-list li .action button.invite-button:focus, #buddypress .bp-invites-content ul.item-list li .action button.invite-button:hover {
 	color: #1fb3dd;
 }
 
