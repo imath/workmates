@@ -2,10 +2,10 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: WorkMates 2.0.0-alpha\n"
+"Project-Id-Version: WorkMates 2.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/workmates/issues\n"
-"POT-Creation-Date: 2018-05-25 04:35:08+00:00\n"
-"PO-Revision-Date: 2018-05-25 06:36+0100\n"
+"POT-Creation-Date: 2018-05-26 13:40:17+00:00\n"
+"PO-Revision-Date: 2018-05-26 15:41+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: FRENCH <contact@imathi.eu>\n"
 "Language: en_US\n"
