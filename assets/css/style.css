@@ -154,6 +154,14 @@ body.group-create.group-invites #message.info {
 	content: "\f468";
 }
 
+#group-invites-container .bp-invites-filters {
+	margin-bottom: 1em;
+}
+
+#group-invites-container .bp-invites-filters .last .dashicons {
+	vertical-align: text-bottom;
+}
+
 #group-invites-container .bp-invites-filters ul li a {
 	border: 1px solid #ccc;
 	display: inline-block;
