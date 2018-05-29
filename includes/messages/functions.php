@@ -1,6 +1,22 @@
 <?php
+/**
+ * WorkMates Messages functions.
+ *
+ * @package WorkMates
+ * @since  2.0.0
+ */
+
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Make sure it is possible to send messages to any member.
+ *
+ * @since 2.0.0
+ */
+function workmates_messages_autocomplete_all() {
+	buddypress()->messages->autocomplete_all = true;
+}
 
 /**
  * Search user count query Fallback in case xprofile is not activated
@@ -8,9 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @package WorkMates
  * @since 1.0
  *
- * @uses buddypress() to get BuddyPress main instance
- * @uses bp_is_active() to check the component is active
- * @return string the filtered count query
+ * @param  string $sql The SQL query to count the matching users.
+ * @return string      Unchanged or filtered count query.
  */
 function workmates_filter_message_ac_count( $sql = '' ) {
 	global $wpdb;
@@ -35,9 +50,10 @@ function workmates_filter_message_ac_count( $sql = '' ) {
  * @package WorkMates
  * @since 1.0
  *
- * @uses buddypress() to get BuddyPress main instance
- * @uses bp_is_active() to check the component is active
- * @return string the filtered select query
+ * @param  string  $sql          The SQL query to select the matching users.
+ * @param  string  $search_terms The autocomplete search characters.
+ * @param  integer $pag_sql      The SQL offset.
+ * @return string                Unchanged or the filtered select query.
  */
 function workmates_filter_message_ac_select( $sql = '', $search_terms = '', $pag_sql = 1 ) {
 	global $wpdb;
@@ -73,8 +89,9 @@ function workmates_user_query_include_fullnames( BP_User_Query $user_query, $use
 	// But if not activated, as invites_template
 	// uses fullname, this function avoids
 	// the notice error.
-	if ( bp_is_active( 'xprofile' ) )
+	if ( bp_is_active( 'xprofile' ) ) {
 		return;
+	}
 
 	$user_id_names = bp_core_get_user_displaynames( $user_query->user_ids );
 
@@ -85,4 +102,3 @@ function workmates_user_query_include_fullnames( BP_User_Query $user_query, $use
 		}
 	}
 }
-add_action( 'bp_user_query_populate_extras', 'workmates_user_query_include_fullnames', 2, 2 );
