@@ -4,7 +4,7 @@
  * Plugin Name:       WorkMates
  * Plugin URI:        https://imathi.eu/tag/workmates/
  * Description:       Intègre l'interface des invitations de groupe du pack de gabarits de Nouveau dans celui de l'héritage de BP Default.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            imath
  * Author URI:        https://imathi.eu
  * Text Domain:       workmates
@@ -82,7 +82,7 @@ class WorkMates {
 	 */
 	private function setup_globals() {
 		/** WorkMates globals ********************************************/
-		$this->version      = '2.0.0';
+		$this->version      = '2.0.1';
 		$this->domain       = 'workmates';
 		$this->file         = __FILE__;
 		$this->basename     = plugin_basename( $this->file );
