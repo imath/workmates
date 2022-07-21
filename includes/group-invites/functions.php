@@ -145,7 +145,7 @@ function workmates_remove_group_invites_ajax_actions() {
  * @param  array              $r          The Loop's queried arguments.
  * @return boolean                        True if Groups were found. False otherwise.
  */
-function workmates_attach_group_invites_message( $has_groups = true, BP_Groups_Template $g_template, $r = array() ) {
+function workmates_attach_group_invites_message( $has_groups = true, BP_Groups_Template $g_template = null, $r = array() ) {
 	if ( ! isset( $r['type'] ) || 'invites' !== $r['type'] || empty( $g_template->groups ) ) {
 		return $has_groups;
 	}
